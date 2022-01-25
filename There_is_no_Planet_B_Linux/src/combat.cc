@@ -71,7 +71,7 @@ Combat::Combat(int g, int width, int height, float s, string path, string p1, st
   music_fight.setVolume(10.0);
   music_winner.setVolume(10.0);
   music_fight.setLoop(true);
-  vector<tuple<string, float>> v_sound = {{"three",35.0}, {"two", 35.0}, {"one", 35.0} , {"go",35.0}};
+  vector<tuple<string, float>> v_sound = {{"three",35.0}, {"two", 35.0}, {"one", 35.0} , {"go",35.0}, {"ko",35.0}};
   for(size_t i = 0; i < v_sound.size(); i++)
     load_sound(sound_buffers, sounds, path + "sounds_fight/", v_sound[i]);
 }
@@ -157,11 +157,17 @@ void Combat::change_jauge(Jauge & jauge, int val)
 }
 
 // Test si les personnages sont mort et actions en conscequence
-Menu_Pause* Combat::dead(Personnage & perso, Personnage & adversaire, Jauge_Vie & jauge_vie)
+Menu_Pause* Combat::dead(Personnage & perso, Personnage & adversaire, Jauge_Vie & jauge_vie, RenderWindow & window)
 {
   if(jauge_vie.valeur["val_reach"] == 0)
   {
     fight = false;
+    if(!end)
+    {
+      clock.restart();
+      for(size_t i = 0; i < 24; i++)
+        load_texture(textures["gif"+to_string(i)], file + "gif_ko/image" + to_string(i) + ".png");
+    }
     end = true;
     for(size_t i = 0; i < (perso.att_spe).size(); i++)
       perso.att_spe[i]->suppr = true;
@@ -173,8 +179,16 @@ Menu_Pause* Combat::dead(Personnage & perso, Personnage & adversaire, Jauge_Vie 
       adversaire.att_ult->suppr = true;
     perso.dead(ground, widthWindow);
     // draw winner
-    if(!phrase1)
+    if(clock.getElapsedTime().asMilliseconds() < 2160)
     {
+      gif(window, textures["gif" + to_string((clock.getElapsedTime().asMilliseconds()/90)%24)],
+        sprites["gif" + to_string((clock.getElapsedTime().asMilliseconds()/90)%24)], widthWindow/2, heightWindow/2, 2*scale);
+      if(clock.getElapsedTime().asMilliseconds() < 200)
+        sounds["ko"].play();
+    }
+    else if(!phrase1)
+    {
+      window.draw(sprites["gif23"]);
       music_fight.stop();
       perso.sounds["loose"].play();
       phrase1 = true;
@@ -237,7 +251,7 @@ void Combat::draw(Personnage & perso, Jauge_Mana & jauge_mana, Jauge_Vie & jauge
     for(size_t i = 0; i < 41; i++)
       load_texture(textures["gif"+to_string(i)], file + "gif_fight/image" + to_string(i) + ".png");
   }
-  if(clock.getElapsedTime().asMilliseconds() < 3690)
+  if(clock.getElapsedTime().asMilliseconds() < 3690 && !end)
   {
     gif(window, textures["gif" + to_string((clock.getElapsedTime().asMilliseconds()/90)%41)],
       sprites["gif" + to_string((clock.getElapsedTime().asMilliseconds()/90)%41)], widthWindow/2, heightWindow/2, 1.5*scale);

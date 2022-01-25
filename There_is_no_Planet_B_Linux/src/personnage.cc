@@ -37,7 +37,7 @@ Personnage::Personnage(string n, float s, string t, int sizeX, int sizeY, int an
   sprite.setPosition(pos["x"],pos["y"]); // On bouge le sprite aux coordonnees x, y
   sprite.setScale(scale, scale);
 
-  vector<tuple<string, float>> v_sound = {{"jump",10.0}, {"step", 10.0}, {"special", 10.0} , {"ultime",10.0}, {"win",50.0}, {"loose",50.0}};
+  vector<tuple<string, float>> v_sound = {{"jump",35.0}, {"step", 35.0}, {"special", 30.0} , {"ultime",20.0}, {"win",50.0}, {"loose",50.0}};
   vector<tuple<string, float>> v_sound_commun = {{"punch1", 10.0}, {"punch2", 10.0}, {"punch3", 10.0}, {"hurt", 10.0}};
   for(size_t i = 0; i < v_sound.size(); i++)
     load_sound(sound_buffers, sounds, p, v_sound[i]);
@@ -124,7 +124,7 @@ void Personnage::mouvement(const int & ground, const int & widthWindow)
 void Personnage::up(const int & ground)
 {
   Sound::Status status = sounds["jump"].getStatus();
-  if((status != Sound::Playing) && (pos["y"]== ground))
+  if((status != Sound::Playing) && (pos["y"] + info_sprite["sizeY"] == ground))
     sounds["jump"].play();
   get<0>(animation["anim_walk"]) = get<1>(animation["anim_walk"])/2;
   if(pos["y"] + info_sprite["sizeY"] >= (ground-gravity))
@@ -135,7 +135,7 @@ void Personnage::up(const int & ground)
 void Personnage::left(const int & ground)
 {
   Sound::Status status = sounds["step"].getStatus();
-  if((status != Sound::Playing) && (pos["y"]== ground))
+  if((status != Sound::Playing) && (pos["y"] + info_sprite["sizeY"] == ground))
     sounds["step"].play();
   direction = LEFT; // le personnage regarde à gauche
   if(pos["y"] + info_sprite["sizeY"] == ground && is_attacking == false)

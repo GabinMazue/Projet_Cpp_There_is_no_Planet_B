@@ -146,9 +146,9 @@ int main()
             combat->draw(combat->perso2,combat->jauge_mana2,combat->jauge_vie2,window);
 
             // gestion de la mort des personnages
-            menu_end = combat->dead(combat->perso1, combat->perso2, combat->jauge_vie1);
+            menu_end = combat->dead(combat->perso1, combat->perso2, combat->jauge_vie1, window);
             if(menu_end == nullptr)
-              menu_end = combat->dead(combat->perso2, combat->perso1, combat->jauge_vie2);
+              menu_end = combat->dead(combat->perso2, combat->perso1, combat->jauge_vie2, window);
 
             //suppression des attaques et de leurs sprites
             combat->perso1.suppr_spe();

@@ -148,7 +148,7 @@ Menu_Selection::Menu_Selection(int w, int h, float s, string f, vector<tuple<str
 
 
 // Placement des personnages pour la selection
-// On ne considère pas le cas où il y a un nombre impaire de personnages par ligne
+// On ne considère pas le cas où il y a un nombre paire de personnages par ligne
 vector<int> Menu_Character_Map::placement_character(int nb_c, int sizeX, int sizeY)
 {
   int size_select = nb_c*sizeX + nb_c*widthWindow/50;
@@ -158,8 +158,12 @@ vector<int> Menu_Character_Map::placement_character(int nb_c, int sizeX, int siz
   int column = 0;
   for(map<string, Sprite>::iterator it = sprites_select.begin(); it != sprites_select.end(); it++)
   {
-    pos[it->first] = {{"x", widthWindow/2 - (nb_columns/2)*sizeX - (nb_columns-1)*widthWindow/100 + column*(sizeX + widthWindow/50)},
-      {"y", heightWindow/2 - (nb_lines/2)*sizeY - (nb_lines-1)*widthWindow/100 + line*(sizeY + widthWindow/50)}};
+    int x;
+    if(nb_columns%2 != 0)
+      x = widthWindow/2 - (nb_columns/2)*sizeX -sizeX/2 - (nb_columns-1)*widthWindow/100 + column*(sizeX + widthWindow/50);
+    else
+      x = widthWindow/2 - (nb_columns/2)*sizeX- (nb_columns-1)*widthWindow/100 + column*(sizeX + widthWindow/50);
+    pos[it->first] = {{"x", x}, {"y", heightWindow/2 - (nb_lines/2)*sizeY - (nb_lines-1)*widthWindow/100 + line*(sizeY + widthWindow/50)}};
     column++;
     if(column == nb_columns)
     {
@@ -418,9 +422,17 @@ void Menu_Character_Map::action_menu(Menu & previous_menu, Menu_Character_Map & 
       change_dynamic(cursor, i+1);
       release_button(touche[i], i+1);
       selection(cursor, touche[i]["Select"], i+1);
+      if(select.size() == 1)
+      {
+        unselect(cursor, touche[i]["UnSelect"], i+1);
+        return_back(previous_menu);
+      }
     }
-    unselect(cursor, touche[i]["UnSelect"], i+1);
-    return_back(previous_menu);
+    if(select.size() > 1)
+    {
+      unselect(cursor, touche[i]["UnSelect"], i+1);
+      return_back(previous_menu);
+    }
   }
   if(select.size() > 1)
     switch_next(next_menu);
@@ -442,7 +454,7 @@ Combat* Menu_Character_Map::fight(RenderWindow & window, Music & music)
     }
     if(clock.getElapsedTime().asMilliseconds() < 900)
       gif(window, textures["gif" + to_string((clock.getElapsedTime().asMilliseconds()/150)%6)],
-        sprites["gif" + to_string((clock.getElapsedTime().asMilliseconds()/150)%6)], widthWindow/2, heightWindow/2, scale);
+        sprites["gif" + to_string((clock.getElapsedTime().asMilliseconds()/150)%6)], widthWindow/2, heightWindow/2, 3*scale);
     else
     {
       is_clock_restart = false;
@@ -451,7 +463,7 @@ Combat* Menu_Character_Map::fight(RenderWindow & window, Music & music)
       select["select1"].setFillColor(Color::Yellow);
       on = false;
       clock.restart();
-      Combat* combat = new Combat(widthWindow/2, widthWindow, heightWindow, scale, file + "../combat/", selected["select1"], selected["select2"], selected["select_map"]);
+      Combat* combat = new Combat(widthWindow/1.9, widthWindow, heightWindow, scale, file + "../combat/", selected["select1"], selected["select2"], selected["select_map"]);
       return combat;
     }
   }

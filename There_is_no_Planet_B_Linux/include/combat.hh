@@ -49,7 +49,7 @@ class Combat
     void attaque_special(Personnage &perso, Personnage & adversaire, RenderWindow & window, bool & press_spe);
     void attaque_ultime(Personnage &perso, Personnage & adversaire, RenderWindow & window, bool & press_spe);
     void change_jauge(Jauge & jauge, int val);
-    Menu_Pause* dead(Personnage & perso, Personnage & adversaire, Jauge_Vie & jauge_vie);
+    Menu_Pause* dead(Personnage & perso, Personnage & adversaire, Jauge_Vie & jauge_vie, RenderWindow & window);
     void pause_jeu(Menu_Pause & menu_pause);
     void draw(Personnage & perso, Jauge_Mana & jauge_mana, Jauge_Vie & jauge_vie, RenderWindow & window);
 };
