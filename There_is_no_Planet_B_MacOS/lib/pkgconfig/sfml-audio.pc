@@ -1,4 +1,4 @@
-prefix=/opt/homebrew/Cellar/sfml/2.5.1_1
+prefix=/usr/local/Cellar/sfml/2.5.1_1
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

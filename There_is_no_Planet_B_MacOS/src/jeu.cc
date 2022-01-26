@@ -3,8 +3,8 @@
 int main()
 {
   // Paramètres de la fenêtre
-  int widthWindow = 1440;//2*VideoMode::getDesktopMode().width/3;
-  int heightWindow = 900;//2*VideoMode::getDesktopMode().height/3;
+  int widthWindow = VideoMode::getDesktopMode().width;
+  int heightWindow = VideoMode::getDesktopMode().height;
   if(widthWindow*9/16 > heightWindow)
     widthWindow = heightWindow*16/9;
   else
